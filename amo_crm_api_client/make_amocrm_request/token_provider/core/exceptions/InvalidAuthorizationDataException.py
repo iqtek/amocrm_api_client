@@ -1,0 +1,2 @@
+class InvalidAuthorizationDataException(Exception):
+    pass
