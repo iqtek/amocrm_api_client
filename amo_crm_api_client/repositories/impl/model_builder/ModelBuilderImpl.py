@@ -33,9 +33,10 @@ class ModelBuilderImpl(IModelBuilder):
         response: IJsonResponse,
     ) -> T:
         try:
+            print(response.json)
             return model_type(**response.json)
         except Exception as e:
-            raise BuildModelException from e
+            raise BuildModelException() from e
 
     def build_models(
         self,
@@ -45,4 +46,4 @@ class ModelBuilderImpl(IModelBuilder):
         try:
             return [model_type(**item) for item in response.json]
         except Exception as e:
-            raise BuildModelException from e
+            raise BuildModelException() from e

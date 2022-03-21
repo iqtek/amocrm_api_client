@@ -9,7 +9,7 @@ from amo_crm_api_client.AmoCrmApiClientConfig import AmoCrmApiClientConfig
 from amo_crm_api_client.logger import get_logger
 from amo_crm_api_client.logger import ILogger
 from amo_crm_api_client.make_amocrm_request import handle_startup as crm_startup
-from amo_crm_api_client.make_amocrm_request.core.exceptions import (
+from amo_crm_api_client.make_amocrm_request import (
     ExceedRequestLimitException,
 )
 from amo_crm_api_client.rate_limiter import IRateLimiter
