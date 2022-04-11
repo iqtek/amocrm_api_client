@@ -44,12 +44,13 @@ class ContactRepository:
         )
         return model
 
-    async def get_page_by_phone_number(self, phone_number: str) -> ContactsPage:
+    async def get_page_by_phone_number(self, phone_number: str, page: Optional[int] = 0) -> ContactsPage:
         response: IJsonResponse = await self.__amo_crm_request_executor(
             lambda: self.__make_request_function.request(
                 method=RequestMethod.GET,
                 path=f"/api/v4/contacts",
                 parameters={
+                    "page": page,
                     "query": phone_number,
                     "with": "leads",
                 }
