@@ -1,8 +1,9 @@
-integration_id: xxxxxxxx-xxxx-xxxx-xxx-xxxxxxxxxxxx
-secret_key: secret_key
-auth_code: auth_code
-redirect_uri: https://mycompany.ru/
-base_url: https://account.amocrm.ru/
+amocrm:
+  integration_id: str
+  secret_key: str
+  auth_code: str
+  base_url: str
+  redirect_uri: str
 
 rate_limiter:
   interval_length: 1
@@ -14,11 +15,3 @@ repeater:
   delay: 1.0
   max_delay: 5.0
   backoff: 0
-
-storage:
-  type: redis
-  settings:
-    host: 127.0.0.1
-    port: 6379
-    database: 1
-    prefix: amocrm-api-client

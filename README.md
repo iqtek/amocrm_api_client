@@ -18,17 +18,18 @@ pip install git+https://github.com/iqtek/amocrm_api_client.git@v1.1.0
 
 ##  Create client 
 Create a client using the pydantic model.
+
 ```python
 import yaml
 
-from amo_crm_api_client import (
-    create_amo_crm_api_client,
+from amocrm_api_client import (
+    create_amocrm_api_client,
     AmoCrmApiClient,
     AmoCrmApiClientConfig,
 )
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     with open('config.yml') as config_file:
         config = yaml.safe_load(config_file)
 
@@ -47,8 +48,8 @@ If you are using MemoryStorage, then a call deinitialize() is required so that t
 import asyncio
 import yaml
 
-from amo_crm_api_client import (
-    create_amo_crm_api_client,
+from amocrm_api_client import (
+    create_amocrm_api_client,
     AmoCrmApiClient,
     AmoCrmApiClientConfig,
 )
@@ -62,7 +63,6 @@ async def test(amocrm_client: AmoCrmApiClient) -> None:
 
 
 if __name__ == "__main__":
-
     with open('config.yml') as config_file:
         config = yaml.safe_load(config_file)
 

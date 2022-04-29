@@ -1,2 +1,0 @@
-class AuthorizationCodeExpiredException(Exception):
-    pass

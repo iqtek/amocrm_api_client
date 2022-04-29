@@ -1,2 +1,0 @@
-class AmocrmClientException(Exception):
-    pass
