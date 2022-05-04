@@ -1,2 +1,0 @@
-class RefreshTokenExpiredException(Exception):
-    pass
