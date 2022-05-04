@@ -3,13 +3,13 @@ from typing import Mapping
 
 from amocrm_api_client.make_json_request import MakeJsonRequestFunctionImpl
 
-from .data_storage import DataStorageImpl
 from .StandardTokenProvider import StandardTokenProvider
 from .StandardTokenProviderConfig import StandardTokenProviderConfig
 from ..GetTokensByAuthCodeFunction import GetTokensByAuthCodeFunction
 from ..GetTokensByRefreshTokenFunction import GetTokensByRefreshTokenFunction
 from ...core import ITokenProvider
 
+from .token_storage import TokenStorageImpl
 
 __all__ = [
     "StandardTokenProviderFactory",
@@ -24,7 +24,7 @@ class StandardTokenProviderFactory:
 
         config = StandardTokenProviderConfig(**settings)
 
-        data_storage = DataStorageImpl(
+        token_storage = TokenStorageImpl(
             backup_file_path=config.backup_file_path,
             encryption_key=config.encryption_key,
         )
@@ -43,7 +43,7 @@ class StandardTokenProviderFactory:
             config=config,
             get_tokens_by_auth_code=get_tokens_by_auth_code_function,
             get_tokens_by_refresh_token=get_tokens_by_refresh_token_function,
-            data_storage=data_storage,
+            token_storage=token_storage,
         )
 
         return token_provider

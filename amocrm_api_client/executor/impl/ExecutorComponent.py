@@ -70,7 +70,7 @@ class ExecutorComponent(IExecutorComponent):
                 try:
                     await self.__task_execute(amocrm_request_task)
                 except Exception as e:
-                    self.__logger.error(f'Execute task error: {e!r}')
+                    self.__logger.error(f"Execute task error: {e!r}.")
                     self.__queue.task_done()
                 self.__queue.task_done()
 
@@ -80,7 +80,7 @@ class ExecutorComponent(IExecutorComponent):
                     try:
                         await self.__task_execute(amo_crm_request_task)
                     except Exception as e:
-                        self.__logger.error(f'Execute task error: {e!r}')
+                        self.__logger.error(f"Execute task error: {e!r}.")
                         self.__queue.task_done()
                     self.__queue.task_done()
             except QueueEmpty:

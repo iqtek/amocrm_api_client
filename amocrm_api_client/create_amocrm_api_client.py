@@ -5,9 +5,9 @@ from typing import Optional
 
 from amocrm_api_client.AmoCrmApiClient import AmoCrmApiClient
 from amocrm_api_client.AmoCrmApiClientConfig import AmoCrmApiClientConfig
+
 from amocrm_api_client.executor import ExecutorComponent
 from amocrm_api_client.logger import api_client_logger
-
 from amocrm_api_client.make_amocrm_request import ExceedRequestLimitException
 from amocrm_api_client.make_amocrm_request import MakeAmocrmRequestFunctionImpl
 from amocrm_api_client.make_json_request import MakeJsonRequestFunctionImpl
@@ -34,7 +34,7 @@ __all__ = [
 
 def create_amocrm_api_client(
     token_provider: ITokenProvider,
-    config: Optional[AmoCrmApiClientConfig] = None,
+    config: AmoCrmApiClientConfig,
     rate_limiter: Optional[IRateLimiterDecorator] = None,
     event_loop: Optional[AbstractEventLoop] = None,
     logger: Optional[Logger] = None,
