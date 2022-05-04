@@ -15,5 +15,5 @@ __all__ = [
 
 class AmoCrmApiClientConfig(BaseModel):
     base_url: str
-    repeater: Optional[RepeaterConfigModel] = RepeaterConfigModel()
-    rate_limiter: Optional[RateLimiterConfig] = RateLimiterConfig()
+    repeater: RepeaterConfigModel = RepeaterConfigModel()
+    rate_limiter: RateLimiterConfig = RateLimiterConfig()
