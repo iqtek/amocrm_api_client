@@ -19,7 +19,8 @@ class Embedded(BaseModel):
 
 
 class UnsortedCallMetadata(BaseModel):
-    from_: str = Field(alias='from')
+    uniq: str
+    from_: str
     phone: str
     called_at: int
     duration: int
