@@ -15,10 +15,12 @@ class UnsortedRepository(AbstractRepository):
     __slots__ = ()
 
     async def add_call(self, call: UnsortedCall) -> None:
+        data = call.dict(exclude_none=True)
+        data["metadata"]["from"] = data["metadata"].pop("from_")
         await self._request_executor(
             lambda: self._make_request_function.request(
                 method=RequestMethod.POST,
                 path=f"/api/v4/leads/unsorted/sip",
-                json=[call.dict(exclude_none=True)],
+                json=[data],
             )
         )

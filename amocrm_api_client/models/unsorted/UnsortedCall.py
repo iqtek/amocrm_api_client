@@ -19,7 +19,8 @@ class Embedded(BaseModel):
 
 
 class UnsortedCallMetadata(BaseModel):
-    _from: str
+    uniq: str
+    from_: str
     phone: str
     called_at: int
     duration: int
@@ -34,4 +35,4 @@ class UnsortedCall(BaseModel):
     pipeline_id: int
     created_at: int
     metadata: UnsortedCallMetadata
-    embedded: Embedded = Field(..., alias='_embedded')
+    embedded: Optional[Embedded] = Field(None, alias='_embedded')
