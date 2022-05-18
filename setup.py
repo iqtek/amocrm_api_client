@@ -3,8 +3,7 @@ from setuptools import find_packages
 
 
 install_requires = [
-    'aiohttp==3.8.1',
-    'aioredis==2.0.0',
+    'aiohttp>=3.8.1',
     'aiosignal==1.2.0',
     'async-timeout==4.0.1',
     'attrs==21.2.0',
@@ -12,10 +11,10 @@ install_requires = [
     'frozenlist==1.2.0',
     'idna==3.3',
     'multidict==5.2.0',
-    'pydantic==1.8.2',
-    'pydantic-collections==0.2.0',
+    'pydantic>=1.8.2',
+    'pydantic-collections>=0.2.0',
     'PyYAML==6.0',
-    'typing_extensions==4.0.1',
+    'typing_extensions>=4.0.1',
     'ujson==4.3.0',
     'yarl==1.7.2',
     'PyJWT~=2.3.0',
@@ -51,18 +50,9 @@ docs_requires = [
 setup(
     name="amocrm_api_client",
     description="Api Client for AmoCrm.",
-    version="2.0.0",
+    version="2.0.1",
     license="MIT",
-    packages=find_packages(exclude=[
-        'build',
-        'data',
-        'dist',
-        'requirements',
-        'contrib',
-        'docs',
-        'tests',
-        'logs']
-    ),
+    packages=find_packages(exclude=['examples']),
     status='Production',
     install_requires=install_requires,
     extras_require={
