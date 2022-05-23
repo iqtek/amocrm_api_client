@@ -21,6 +21,7 @@ from amocrm_api_client.repositories import CallsRepository
 from amocrm_api_client.repositories import ContactsRepository
 from amocrm_api_client.repositories import EventsRepository
 from amocrm_api_client.repositories import LeadsRepository
+from amocrm_api_client.repositories import TasksRepository
 from amocrm_api_client.repositories import PipelinesRepository
 from amocrm_api_client.repositories import UnsortedRepository
 from amocrm_api_client.repositories import UsersRepository
@@ -77,6 +78,11 @@ def create_amocrm_api_client(
         model_builder=model_builder,
     )
 
+    tasks_repository = TasksRepository(
+        request_executor=executor_component,
+        make_amocrm_request_function=make_amocrm_request_function,
+        model_builder=model_builder,
+    )
     account = Account(
         request_executor=executor_component,
         make_amocrm_request_function=make_amocrm_request_function,
@@ -115,6 +121,7 @@ def create_amocrm_api_client(
     client = AmoCrmApiClient(
         executor_component=executor_component,
         leads_repository=leads_repository,
+        tasks_repository=tasks_repository,
         account=account,
         contacts_repository=contacts_repository,
         unsorted_repository=unsorted_repository,
