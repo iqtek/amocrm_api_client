@@ -38,3 +38,16 @@ class ContactsRepository(IPaginable[Contact], AbstractRepository):
             data=response.json,
         )
         return model
+
+    async def get_by_id(
+        self,
+        id: int
+    ) -> Contact:
+        response = await self._request_executor(
+            lambda: self._make_request_function.request(
+                method=RequestMethod.GET,
+                path=f"/api/v4/contacts/{id}",
+            )
+        )
+        model = self._model_builder.build_model(Contact, response.json)
+        return model

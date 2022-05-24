@@ -3,6 +3,7 @@ from typing import Optional
 from typing import Union
 
 from amocrm_api_client.make_json_request import RequestMethod
+from amocrm_api_client.models import AddNote
 from amocrm_api_client.models import CreateLead
 from amocrm_api_client.models import Lead
 from amocrm_api_client.models import Page
@@ -72,5 +73,23 @@ class LeadsRepository(IPaginable[Lead], AbstractRepository):
                 method=RequestMethod.PATCH,
                 path=f"/api/v4/leads",
                 json=[lead.dict(by_alias=True, exclude_none=True)]
+            )
+        )
+
+    async def updates(self, leads: Collection[UpdateLead]) -> None:
+        await self._request_executor(
+            lambda: self._make_request_function.request(
+                method=RequestMethod.PATCH,
+                path=f"/api/v4/leads",
+                json=[lead.dict(by_alias=True, exclude_none=True) for lead in leads]
+            )
+        )
+
+    async def add_notes(self, notes: Collection[AddNote]) -> None:
+        await self._request_executor(
+            lambda: self._make_request_function.request(
+                method=RequestMethod.POST,
+                path=f"/api/v4/leads/notes",
+                json=[note.dict() for note in notes]
             )
         )

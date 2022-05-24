@@ -48,4 +48,4 @@ class Lead(BaseModel):
     score: Optional[int] = None
     account_id: int
     is_price_modified_by_robot: Optional[bool] = None
-    embedded: Embedded = not Field(None, alias="_embedded")
+    embedded: Embedded = Field(..., alias='_embedded')
