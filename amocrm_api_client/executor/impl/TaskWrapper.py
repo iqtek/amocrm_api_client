@@ -79,10 +79,10 @@ class TaskWrapper(ITaskWrapper):
     async def __call__(self) -> T:
         return await self.__future
 
-    def __ge__(self, other: 'TaskWrapper'):
+    def __gt__(self, other: 'TaskWrapper'):
         return self.priority > other.priority
 
-    def __le__(self, other: 'TaskWrapper'):
+    def __lt__(self, other: 'TaskWrapper'):
         return self.priority < other.priority
 
     def __eq__(self, other: 'TaskWrapper'):

@@ -32,7 +32,9 @@ class MakeJsonRequestFunctionImpl(IMakeJsonRequestFunction):
     ) -> IJsonResponse:
         try:
             async with ClientSession(
-                    timeout=ClientTimeout(total=timeout)) as session:
+                timeout=ClientTimeout(total=timeout),
+                trust_env=True,
+            ) as session:
                 async with session.request(
                     method=method.value,
                     url=path,

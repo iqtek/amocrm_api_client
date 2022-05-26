@@ -3,6 +3,7 @@ from amocrm_api_client.component import IComponent
 from amocrm_api_client.repositories import Account
 from amocrm_api_client.repositories import CallsRepository
 from amocrm_api_client.repositories import ContactsRepository
+from amocrm_api_client.repositories import CompaniesRepository
 from amocrm_api_client.repositories import EventsRepository
 from amocrm_api_client.repositories import LeadsRepository
 from amocrm_api_client.repositories import TasksRepository
@@ -37,6 +38,7 @@ class AmoCrmApiClient(IComponent):
         executor_component: IComponent,
         account: Account,
         contacts_repository: ContactsRepository,
+        companies_repository: CompaniesRepository,
         unsorted_repository: UnsortedRepository,
         pipelines_repository: PipelinesRepository,
         events_repository: EventsRepository,
@@ -49,6 +51,7 @@ class AmoCrmApiClient(IComponent):
         self.tasks = tasks_repository
         self.account = account
         self.contacts = contacts_repository
+        self.companies = companies_repository
         self.unsorted = unsorted_repository
         self.calls = calls_repository
         self.pipelines = pipelines_repository

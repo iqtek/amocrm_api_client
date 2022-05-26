@@ -17,6 +17,7 @@ from amocrm_api_client.rate_limiter import RateLimiterImpl
 from amocrm_api_client.repeater import RepeaterDecoratorImpl
 
 from amocrm_api_client.repositories import Account
+from amocrm_api_client.repositories import CompaniesRepository
 from amocrm_api_client.repositories import CallsRepository
 from amocrm_api_client.repositories import ContactsRepository
 from amocrm_api_client.repositories import EventsRepository
@@ -83,6 +84,11 @@ def create_amocrm_api_client(
         make_amocrm_request_function=make_amocrm_request_function,
         model_builder=model_builder,
     )
+    companies_repository = CompaniesRepository(
+        request_executor=executor_component,
+        make_amocrm_request_function=make_amocrm_request_function,
+        model_builder=model_builder,
+    )
     account = Account(
         request_executor=executor_component,
         make_amocrm_request_function=make_amocrm_request_function,
@@ -124,6 +130,7 @@ def create_amocrm_api_client(
         tasks_repository=tasks_repository,
         account=account,
         contacts_repository=contacts_repository,
+        companies_repository=companies_repository,
         unsorted_repository=unsorted_repository,
         pipelines_repository=pipelines_repository,
         events_repository=events_repository,
