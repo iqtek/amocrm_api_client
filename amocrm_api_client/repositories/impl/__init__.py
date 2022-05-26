@@ -3,6 +3,7 @@ from .CallsRepository import CallsRepository
 from .ContactsRepository import ContactsRepository
 from .EventsRepository import EventsRepository
 from .LeadsRepository import LeadsRepository
+from .CompaniesRepository import CompaniesRepository
 from .TasksRepository import TasksRepository
 from .PipelinesRepository import PipelinesRepository
 from .UnsortedRepository import UnsortedRepository

@@ -1,4 +1,6 @@
 from asyncio import AbstractEventLoop
+from asyncio import Task
+from asyncio import get_event_loop
 from asyncio import CancelledError
 from asyncio import PriorityQueue
 from asyncio import QueueEmpty

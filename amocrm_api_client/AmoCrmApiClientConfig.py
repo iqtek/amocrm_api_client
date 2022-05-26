@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel
 
 from amocrm_api_client.rate_limiter import RateLimiterConfig

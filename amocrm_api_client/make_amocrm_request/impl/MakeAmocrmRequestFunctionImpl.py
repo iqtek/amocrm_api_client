@@ -1,4 +1,3 @@
-from typing import Any
 from typing import Mapping
 from typing import Optional
 from urllib.parse import urljoin
@@ -13,6 +12,7 @@ from amocrm_api_client.token_provider import ITokenProvider
 from ..core import AccountIsBlockedException
 from ..core import ApiAccessException
 from ..core import ExceedRequestLimitException
+from ..core import EntityNotFoundException
 from ..core import IMakeAmocrmRequestFunction
 from ..core import IncorrectDataException
 from ..core import ManyEntityMutations
