@@ -3,18 +3,18 @@ from typing import Collection, Optional, Union
 from amocrm_api_client.make_json_request import RequestMethod
 
 from amocrm_api_client.models import Page
-from amocrm_api_client.models import Contact
+from amocrm_api_client.models import Catalog
+from amocrm_api_client.models import CatalogElement
 
 from ..core import IPaginable
 from .AbstractRepository import AbstractRepository
-from ...models.CatalogElement import CatalogElement
 
 __all__ = [
     "CatalogsRepository",
 ]
 
 
-class CatalogsRepository(IPaginable[Contact], AbstractRepository):
+class CatalogsRepository(IPaginable[Catalog], AbstractRepository):
 
     __slots__ = ()
 
@@ -24,17 +24,17 @@ class CatalogsRepository(IPaginable[Contact], AbstractRepository):
         page: int = 1,
         limit: int = 250,
         query: Optional[Union[str, int]] = None
-    ) -> Page[Contact]:
+    ) -> Page[Catalog]:
         response = await self._request_executor(
             lambda: self._make_request_function.request(
                 method=RequestMethod.GET,
-                path=f"/api/v4/contacts",
+                path=f"/api/v4/catalogs",
             )
         )
-        response.json["_embedded"] = response.json["_embedded"]["contacts"]
+        response.json["_embedded"] = response.json["_embedded"]["catalogs"]
         print(response.json)
         model = self._model_builder.build_model(
-            model_type=Page[Contact],
+            model_type=Page[Catalog],
             data=response.json,
         )
         return model
