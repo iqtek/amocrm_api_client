@@ -6,7 +6,6 @@ from pydantic import Field
 
 from ..Tag import Tag
 
-
 __all__ = [
     "Lead",
     "CreateLead",
@@ -21,10 +20,20 @@ class Company(BaseModel):
     id: int
 
 
+class CatalogElementMetaData(BaseModel):
+    catalog_id: int
+
+
+class CatalogElement(BaseModel):
+    id: int
+    metadata: CatalogElementMetaData
+
+
 class Embedded(BaseModel):
     tags: Optional[Sequence[Tag]] = None
     contacts: Optional[Sequence[Contact]] = None
     companies: Optional[Sequence[Company]] = None
+    catalog_elements: Optional[Sequence[CatalogElement]] = None
 
 
 class Lead(BaseModel):
