@@ -4,6 +4,7 @@ from amocrm_api_client.make_json_request import RequestMethod
 
 from amocrm_api_client.models import Page
 from amocrm_api_client.models import Catalog
+from amocrm_api_client.models import Element
 from amocrm_api_client.models import CatalogElement
 
 from ..core import IPaginable
@@ -35,6 +36,28 @@ class CatalogsRepository(IPaginable[Catalog], AbstractRepository):
         print(response.json)
         model = self._model_builder.build_model(
             model_type=Page[Catalog],
+            data=response.json,
+        )
+        return model
+
+    async def get_page_elements(
+        self,
+        catalog_id: int,
+        _with: Optional[Collection[str]] = None,
+        page: int = 1,
+        limit: int = 250,
+        query: Optional[Union[str, int]] = None
+    ) -> Page[Element]:
+        response = await self._request_executor(
+            lambda: self._make_request_function.request(
+                method=RequestMethod.GET,
+                path=f"/api/v4/catalogs/{catalog_id}/elements",
+            )
+        )
+        response.json["_embedded"] = response.json["_embedded"]["elements"]
+        print(response.json)
+        model = self._model_builder.build_model(
+            model_type=Page[Element],
             data=response.json,
         )
         return model
