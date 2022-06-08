@@ -39,7 +39,7 @@ class Embedded(BaseModel):
 class Lead(BaseModel):
     id: int
     name: str
-    price: int
+    price: Optional[int] = None
     responsible_user_id: int
     group_id: int
     status_id: int
