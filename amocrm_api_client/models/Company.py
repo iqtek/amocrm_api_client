@@ -35,8 +35,8 @@ class Company(BaseModel):
     responsible_user_id: int
     created_at: datetime
     updated_at: datetime
-    group_id: int
-    created_by: int
-    updated_by: int
+    group_id: Optional[int] = None
+    created_by: Optional[int] = None
+    updated_by: Optional[int] = None
     is_deleted: bool
     custom_fields_values: Optional[List[CustomFieldValue]]

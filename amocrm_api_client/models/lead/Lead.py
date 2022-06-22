@@ -21,12 +21,12 @@ class Company(BaseModel):
 
 
 class CatalogElementMetaData(BaseModel):
-    catalog_id: int
+    catalog_id: Optional[int] = None
 
 
 class CatalogElement(BaseModel):
-    id: int
-    metadata: CatalogElementMetaData
+    id: Optional[int] = None
+    metadata: Optional[CatalogElementMetaData] = None
 
 
 class Embedded(BaseModel):
@@ -38,12 +38,12 @@ class Embedded(BaseModel):
 
 class Lead(BaseModel):
     id: int
-    name: str
+    name: Optional[str] = None
     price: Optional[int] = None
-    responsible_user_id: int
-    group_id: int
-    status_id: int
-    pipeline_id: int
+    responsible_user_id: Optional[int] = None
+    group_id: Optional[int] = None
+    status_id: Optional[int] = None
+    pipeline_id: Optional[int] = None
     loss_reason_id: Optional[int] = None
     source_id: Optional[int] = None
     created_by: int
@@ -51,10 +51,10 @@ class Lead(BaseModel):
     closed_at: Optional[int] = None
     created_at: int
     updated_at: int
-    closest_task_at: Optional[int]
+    closest_task_at: Optional[int] = None
     is_deleted: bool
     custom_fields_values: Optional[Sequence] = None
     score: Optional[int] = None
-    account_id: int
+    account_id: Optional[int] = None
     is_price_modified_by_robot: Optional[bool] = None
     embedded: Embedded = Field(..., alias='_embedded')

@@ -25,13 +25,13 @@ class CustomFieldValue(BaseModel):
 
 class Contact(BaseModel):
     id: int
-    name: str
+    name: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     responsible_user_id: Optional[int] = None
     group_id: Optional[int] = None
-    created_by: int
-    updated_by: int
+    created_by: Optional[int] = None
+    updated_by: Optional[int] = None
     created_at: int
     updated_at: int
     is_deleted: Optional[bool] = None
