@@ -104,3 +104,6 @@ class TokenStorageImpl(ITokenStorage):
         data[self.__REFRESH_TOKEN_EXPIRE_KEY] = self.__get_time() + expire
 
         await self._save_data(data)
+
+    async def clear(self) -> None:
+        os.remove(self.__backup_file_path)

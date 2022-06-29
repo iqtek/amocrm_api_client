@@ -1,3 +1,5 @@
+from warnings import warn
+
 from amocrm_api_client.exceptions import AmocrmClientException
 
 from .StandardTokenProviderConfig import StandardTokenProviderConfig
@@ -65,9 +67,14 @@ class StandardTokenProvider(ITokenProvider):
             access_token=tokens_bundle.access_token,
             expire=tokens_bundle.expires_in,
         )
+
         await self.__token_storage.set_refresh_token(
             refresh_token=tokens_bundle.refresh_token,
             expire=self.__REFRESH_TOKEN_TTL,
         )
 
-        return tokens_bundle.access_token
+        return await self.__token_storage.get_access_token()
+
+    async def revoke_tokens(self) -> None:
+        await self.__token_storage.clear()
+        warn("TokenProvider token was revoked.")

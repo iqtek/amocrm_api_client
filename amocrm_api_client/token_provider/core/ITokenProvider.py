@@ -9,3 +9,6 @@ class ITokenProvider:
 
     async def __call__(self) -> str:
         raise NotImplementedError()
+
+    async def revoke_tokens(self) -> None:
+        raise NotImplementedError()

@@ -42,7 +42,7 @@ class MakeAmocrmRequestFunctionImpl(IMakeAmocrmRequestFunction):
         self.__make_json_request_function = make_json_request_function
         self.__token_provider = token_provider
 
-    def __check_response_code(self, status_code: int, text: Optional[str] = "") -> None:
+    async def __check_response_code(self, status_code: int, text: Optional[str] = "") -> None:
 
         exception: Optional[Exception] = None
 
@@ -50,12 +50,15 @@ class MakeAmocrmRequestFunctionImpl(IMakeAmocrmRequestFunction):
             exception = EntityNotFoundException(text)
 
         elif status_code == 400:
+            await self.__token_provider.revoke_tokens()
             exception = IncorrectDataException(text)
 
         elif status_code == 401:
+            await self.__token_provider.revoke_tokens()
             exception = NotAuthorizedException(text)
 
         elif status_code == 402:
+            await self.__token_provider.revoke_tokens()
             exception = ApiAccessException(text)
 
         elif status_code == 403:
@@ -101,8 +104,8 @@ class MakeAmocrmRequestFunctionImpl(IMakeAmocrmRequestFunction):
             )
         except MakeJsonRequestException as e:
             if e.status_code:
-                self.__check_response_code(e.status_code)
+                await self.__check_response_code(e.status_code)
             raise e
 
-        self.__check_response_code(response.status_code, text=str(response.json))
+        await self.__check_response_code(response.status_code, text=str(response.json))
         return response
