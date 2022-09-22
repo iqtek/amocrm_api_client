@@ -8,6 +8,7 @@ from amocrm_api_client.models import Page
 from amocrm_api_client.models.user import User
 
 from .AbstractRepository import AbstractRepository
+from .functions import make_params
 from ..core import IPaginable
 
 
@@ -27,10 +28,12 @@ class UsersRepository(IPaginable[User], AbstractRepository):
         limit: int = 250,
         query: Optional[Union[str, int]] = None
     ) -> Page[User]:
+        params = make_params(_with=_with, page=page, limit=limit, query=query)
         response: IJsonResponse = await self._request_executor(
             lambda: self._make_request_function.request(
                 method=RequestMethod.GET,
                 path=f"/api/v4/users",
+                parameters=params,
             )
         )
         response.json["_embedded"] = response.json["_embedded"]["users"]
