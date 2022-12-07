@@ -32,8 +32,8 @@ class Contact(BaseModel):
     group_id: Optional[int] = None
     created_by: Optional[int] = None
     updated_by: Optional[int] = None
-    created_at: int
-    updated_at: int
+    created_at: Optional[int] = None
+    updated_at: Optional[int] = None
     is_deleted: Optional[bool] = None
     closest_task_at: Optional[int] = None
     custom_fields_values: Optional[List[CustomFieldValue]] = None

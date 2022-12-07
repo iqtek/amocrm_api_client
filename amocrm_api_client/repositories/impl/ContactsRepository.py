@@ -25,18 +25,19 @@ class ContactsRepository(IPaginable[Contact], AbstractRepository):
         _with: Optional[Collection[str]] = None,
         page: int = 1,
         limit: int = 250,
-        query: Optional[Union[str, int]] = None
+        query: Optional[Union[str, int]] = None,
+        filter: str = None,
     ) -> Page[Contact]:
         params = make_params(_with=_with, page=page, limit=limit, query=query)
         response = await self._request_executor(
             lambda: self._make_request_function.request(
                 method=RequestMethod.GET,
-                path=f"/api/v4/contacts",
+                path=f"/api/v4/contacts?filter[custom_fields_values][{field_id}][]={value}",
                 parameters=params,
             )
         )
-        response.json["_embedded"] = response.json["_embedded"]["contacts"]
 
+        response.json["_embedded"] = response.json["_embedded"]["contacts"]
         model = self._model_builder.build_model(
             model_type=Page[Contact],
             data=response.json,
@@ -55,3 +56,18 @@ class ContactsRepository(IPaginable[Contact], AbstractRepository):
         )
         model = self._model_builder.build_model(Contact, response.json)
         return model
+
+    async def smart_redirect(self, phone: str) -> Collection[Contact]:
+        response = await self._request_executor(
+            lambda: self._make_request_function.request(
+                method=RequestMethod.GET,
+                path=f"/private/api/v2/json/contacts/list",
+                parameters={"query": phone}
+            )
+        )
+
+        result = []
+        for json_contact in response.json["response"]["contacts"]:
+            result.append(self._model_builder.build_model(Contact, json_contact))
+
+        return result
