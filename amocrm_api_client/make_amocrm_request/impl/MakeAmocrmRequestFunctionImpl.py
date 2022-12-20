@@ -8,6 +8,7 @@ from amocrm_api_client.make_json_request import IMakeJsonRequestFunction
 from amocrm_api_client.make_json_request import MakeJsonRequestException
 from amocrm_api_client.make_json_request import RequestMethod
 from amocrm_api_client.token_provider import ITokenProvider
+from amocrm_api_client.logger import api_client_logger
 
 from ..core import AccountIsBlockedException
 from ..core import ApiAccessException
@@ -51,14 +52,23 @@ class MakeAmocrmRequestFunctionImpl(IMakeAmocrmRequestFunction):
 
         elif status_code == 400:
             await self.__token_provider.revoke_tokens()
+            api_client_logger.info(
+                f"Tokens was revoked. Status code: {status_code} Reason: {text}"
+            )
             exception = IncorrectDataException(text)
 
         elif status_code == 401:
             await self.__token_provider.revoke_tokens()
+            api_client_logger.info(
+                f"Tokens was revoked. Status code: {status_code} Reason: {text}"
+            )
             exception = NotAuthorizedException(text)
 
         elif status_code == 402:
             await self.__token_provider.revoke_tokens()
+            api_client_logger.info(
+                f"Tokens was revoked. Status code: {status_code} Reason: {text}"
+            )
             exception = ApiAccessException(text)
 
         elif status_code == 403:
