@@ -51,10 +51,7 @@ class MakeAmocrmRequestFunctionImpl(IMakeAmocrmRequestFunction):
             exception = EntityNotFoundException(text)
 
         elif status_code == 400:
-            await self.__token_provider.revoke_tokens()
-            api_client_logger.info(
-                f"Tokens was revoked. Status code: {status_code} Reason: {text}"
-            )
+            # await self.__token_provider.revoke_tokens()
             exception = IncorrectDataException(text)
 
         elif status_code == 401:

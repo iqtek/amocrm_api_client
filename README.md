@@ -11,7 +11,7 @@ Library for working with the main entities of amoCRM. With automatic authorizati
 
 # Installation
 ```bash
-pip install git+https://github.com/iqtek/amocrm_api_client.git@v2.0.11
+pip install git+https://github.com/iqtek/amocrm_api_client.git@v2.0.12
 ```
 ***
 # Getting started

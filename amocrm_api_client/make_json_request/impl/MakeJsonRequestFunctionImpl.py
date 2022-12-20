@@ -7,6 +7,7 @@ from aiohttp import ClientTimeout
 from ujson import loads
 
 from .JsonResponseImpl import JsonResponseImpl
+
 from ..core import IJsonResponse
 from ..core import IMakeJsonRequestFunction
 from ..core import Json
@@ -66,8 +67,10 @@ class MakeJsonRequestFunctionImpl(IMakeJsonRequestFunction):
         if len(binary_response) == 0:
             json = {}
 
-        return JsonResponseImpl(
+        json_response = JsonResponseImpl(
             status_code=status_code,
             headers=headers,
             json=json,
         )
+
+        return json_response
