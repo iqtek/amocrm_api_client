@@ -118,7 +118,7 @@ class ExecutorComponent(IExecutorComponent):
             self.__event_loop = get_event_loop()
 
         if self.__queue is None:
-            self.__queue = PriorityQueue(loop=self.__event_loop)
+            self.__queue = PriorityQueue()
 
         self.__background_task = self.__event_loop.create_task(
             self.__background_executor()
