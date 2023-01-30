@@ -50,7 +50,7 @@ docs_requires = [
 setup(
     name="amocrm_api_client",
     description="Api Client for AmoCrm.",
-    version="2.0.13",
+    version="2.0.14",
     license="MIT",
     packages=find_packages(exclude=['examples']),
     status='Production',
