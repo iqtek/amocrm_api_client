@@ -51,18 +51,21 @@ class TokenStorageImpl(ITokenStorage):
 
     async def _recover_data(self) -> Mapping[str, Any]:
         if not os.path.exists(self.__backup_file_path):
-            return dict()
+            return {}
 
-        async with async_open(self.__backup_file_path, "r") as afp:
-            encoded_str = await afp.readline()
+        try:
+            async with async_open(self.__backup_file_path, "r") as afp:
+                encoded_str = await afp.readline()
 
-        data: Mapping[str, Any] = jwt.decode(
-            jwt=encoded_str,
-            key=self.__encryption_key,
-            algorithms=["HS256"],
-        )
-        return data
-
+            data: Mapping[str, Any] = jwt.decode(
+                jwt=encoded_str,
+                key=self.__encryption_key,
+                algorithms=["HS256"],
+            )
+            return data
+        except Exception as exc:
+            return {}
+        
     async def get_access_token(self) -> str:
         data = await self._recover_data()
         try:
