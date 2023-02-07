@@ -50,9 +50,6 @@ class TokenStorageImpl(ITokenStorage):
             await afp.write(encoded_str)
 
     async def _recover_data(self) -> Mapping[str, Any]:
-        if not os.path.exists(self.__backup_file_path):
-            return {}
-
         try:
             async with async_open(self.__backup_file_path, "r") as afp:
                 encoded_str = await afp.readline()
