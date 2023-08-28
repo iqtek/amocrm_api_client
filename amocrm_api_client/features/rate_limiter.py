@@ -11,6 +11,10 @@ __all__ = [
     "RateLimiterDecorator",
 ]
 
+
+T = t.TypeVar('T', bound=t.Callable[[], t.Awaitable])
+
+
 class RateLimiterConfig(pydantic.BaseModel):
     period: pydantic.PositiveFloat = 1
     max_request_count: pydantic.PositiveInt = 7  # Maximum requests per period.
@@ -43,7 +47,7 @@ class RateLimiterDecorator:
         # Time of last exceeded number of requests.
         self.__over_speed_timestamp: float = 0
 
-    def __call__(self, wrappee: Callable) -> Callable:
+    def __call__(self, wrappee: T) -> T:
         @wraps(wrappee)
         async def wrapper(*args: Any, **kwargs: Any) -> Any:
             curr_time = time()
