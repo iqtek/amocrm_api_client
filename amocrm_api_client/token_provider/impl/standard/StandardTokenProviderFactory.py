@@ -7,7 +7,7 @@ from .StandardTokenProvider import StandardTokenProvider
 from .StandardTokenProviderConfig import StandardTokenProviderConfig
 from ..GetTokensByAuthCodeFunction import GetTokensByAuthCodeFunction
 from ..GetTokensByRefreshTokenFunction import GetTokensByRefreshTokenFunction
-from ...core import ITokenProvider
+from ...core import TokenProvider
 
 from .token_storage import TokenStorageImpl
 

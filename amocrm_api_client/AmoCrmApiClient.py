@@ -2,19 +2,18 @@ from amocrm_api_client.component import IComponent
 
 from amocrm_api_client.repositories import Account
 from amocrm_api_client.repositories import CallsRepository
-from amocrm_api_client.repositories import ContactsRepository
+from amocrm_api_client.repositories import CatalogsRepository
 from amocrm_api_client.repositories import CompaniesRepository
+from amocrm_api_client.repositories import ContactsRepository
 from amocrm_api_client.repositories import EventsRepository
 from amocrm_api_client.repositories import LeadsRepository
-from amocrm_api_client.repositories import TasksRepository
 from amocrm_api_client.repositories import PipelinesRepository
+from amocrm_api_client.repositories import TasksRepository
 from amocrm_api_client.repositories import UnsortedRepository
 from amocrm_api_client.repositories import UsersRepository
-from amocrm_api_client.repositories import CatalogsRepository
 
-__all__ = [
-    "AmoCrmApiClient",
-]
+
+__all__ = ["AmoCrmApiClient"]
 
 
 class AmoCrmApiClient(IComponent):
@@ -36,7 +35,6 @@ class AmoCrmApiClient(IComponent):
 
     def __init__(
         self,
-        executor_component: IComponent,
         account: Account,
         contacts_repository: ContactsRepository,
         companies_repository: CompaniesRepository,
@@ -48,6 +46,7 @@ class AmoCrmApiClient(IComponent):
         leads_repository: LeadsRepository,
         tasks_repository: TasksRepository,
         users_repository: UsersRepository,
+        executor_component: IComponent,
     ) -> None:
         self.leads = leads_repository
         self.tasks = tasks_repository
@@ -60,7 +59,9 @@ class AmoCrmApiClient(IComponent):
         self.pipelines = pipelines_repository
         self.events = events_repository
         self.users = users_repository
+
         self.__executor_component = executor_component
+
 
     async def initialize(self) -> None:
         await self.__executor_component.initialize()

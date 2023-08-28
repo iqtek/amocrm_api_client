@@ -11,12 +11,12 @@ async def main() -> None:
     base_url = "https://iqtekdev.amocrm.ru/"
 
     settings = {
-        "backup_file_path": "./backup_file",
-        "encryption_key": "my_key_for_encrypting_tokens",
-        "integration_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-        "secret_key": "secret_key",
+        "backup_file_path": "./credentials.txt",
+        "encryption_key": "asterisk_ng",
+        "integration_id": "cf086dcc-6d5a-4c8a-9c73-0aefa84b657c",
+        "secret_key": "LVt49pTDf9HM1luo2xGmL4JDRZCLWya4LhOmeV9CZ4Z4GDgiRWaEL0U6QcMHg3T9",
         "auth_code": "auth_code",
-        "base_url": "https://mycompany.amocrm.ru/",
+        "base_url": "https://iqtekdev.amocrm.ru/",
         "redirect_uri": "https://mycompany.ru/",
     }
 
@@ -30,8 +30,8 @@ async def main() -> None:
     )
 
     await amo_client.initialize()
-    info = await amo_client.account.get_info()
-    print(info)
+    contacts_page = await amo_client.users.get_page()
+    print(contacts_page)
     await amo_client.deinitialize()
 
 

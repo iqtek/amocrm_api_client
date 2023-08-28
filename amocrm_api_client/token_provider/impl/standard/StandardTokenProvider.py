@@ -1,13 +1,18 @@
 from warnings import warn
-
-from amocrm_api_client.exceptions import AmocrmClientException
+import typing as t
+from amocrm_api_client.utils import AmocrmClientException
 
 from .StandardTokenProviderConfig import StandardTokenProviderConfig
-from .token_storage import ITokenStorage
 
-from ...core import IGetTokensByAuthCodeFunction
-from ...core import IGetTokensByRefreshTokenFunction
-from ...core import ITokenProvider
+from ..token_storage import TokenBundle
+from ..token_storage import TokenStorage
+
+from ..authorization import TokenPair
+from ..authorization import GetTokensByAuthCodeFunction
+from ..authorization import GetTokensByRefreshTokenFunction
+from ...core import TokenProvider
+
+from ...core import RefreshTokenExpiredException
 
 
 __all__ = [
@@ -29,52 +34,63 @@ class StandardTokenProvider(ITokenProvider):
     def __init__(
         self,
         config: StandardTokenProviderConfig,
-        get_tokens_by_auth_code: IGetTokensByAuthCodeFunction,
-        get_tokens_by_refresh_token: IGetTokensByRefreshTokenFunction,
-        token_storage: ITokenStorage,
+        get_tokens_by_auth_code: GetTokensByAuthCodeFunction,
+        get_tokens_by_refresh_token: GetTokensByRefreshTokenFunction,
+        token_storage: TokenStorage,
     ) -> None:
         self.__config = config
         self.__get_tokens_by_auth_code = get_tokens_by_auth_code
         self.__get_tokens_by_refresh_token = get_tokens_by_refresh_token
         self.__token_storage = token_storage
+        self.__token_bundle: t.Optional[TokenBundle] = None
+
+    def __token_pair_to_token_bundle(self, token_pair: TokenPair) -> TokenBundle:
+        return TokenBundle(
+            access_token=token_pair.access_token,
+            access_token_expires_in=token_pair.expires_in,
+            refresh_token=token_pair.refresh_token,
+            refresh_token_expires_in=int(time()) + self.__REFRESH_TOKEN_TTL
+        )
 
     async def __call__(self) -> str:
-        try:
-            return await self.__token_storage.get_access_token()
-        except AmocrmClientException:
-            pass
+        tokens = self.__token_bundle or (await self.__token_storage.get_tokens())
 
-        try:
-            refresh_token = await self.__token_storage.get_refresh_token()
-        except AmocrmClientException:
-            tokens_bundle = await self.__get_tokens_by_auth_code(
+        if tokens.access_token_expires_in <= time():
+            return tokens.access_token
+
+        if tokens.refresh_token_expires_in <= time():
+            token_pair = await self.__get_tokens_by_refresh_token(
                 base_url=self.__config.base_url,
                 integration_id=self.__config.integration_id,
                 secret_key=self.__config.secret_key,
-                auth_code=self.__config.auth_code,
-                redirect_uri=self.__config.redirect_uri,
-            )
-        else:
-            tokens_bundle = await self.__get_tokens_by_refresh_token(
-                base_url=self.__config.base_url,
-                integration_id=self.__config.integration_id,
-                secret_key=self.__config.secret_key,
-                refresh_token=refresh_token,
+                refresh_token=tokens.refresh_token,
                 redirect_uri=self.__config.redirect_uri,
             )
 
-        await self.__token_storage.set_access_token(
-            access_token=tokens_bundle.access_token,
-            expire=tokens_bundle.expires_in,
+            self.__token_bundle = self.__token_pair_to_token_bundle(token_pair)
+            await self.__token_storage.set_tokens(self.__token_bundle)
+            return self.__token_bundle.access_token
+
+        token_pair = await self.__get_tokens_by_auth_code(
+            base_url=self.__config.base_url,
+            integration_id=self.__config.integration_id,
+            secret_key=self.__config.secret_key,
+            auth_code=self.__config.auth_code,
+            redirect_uri=self.__config.redirect_uri,
         )
 
-        await self.__token_storage.set_refresh_token(
-            refresh_token=tokens_bundle.refresh_token,
-            expire=self.__REFRESH_TOKEN_TTL,
+        self.__token_bundle = self.__token_pair_to_token_bundle(token_pair)
+        await self.__token_storage.set_tokens(self.__token_bundle)
+        return self.__token_bundle.access_token
+
+    async def revoke_access_token(self) -> None:
+        token_pair = await self.__get_tokens_by_refresh_token(
+            base_url=self.__config.base_url,
+            integration_id=self.__config.integration_id,
+            secret_key=self.__config.secret_key,
+            refresh_token=tokens.refresh_token,
+            redirect_uri=self.__config.redirect_uri,
         )
 
-        return await self.__token_storage.get_access_token()
-
-    async def revoke_tokens(self) -> None:
-        await self.__token_storage.clear()
-        warn("TokenProvider token was revoked.")
+        self.__token_bundle = self.__token_pair_to_token_bundle(token_pair)
+        await self.__token_storage.set_tokens(self.__token_bundle)
