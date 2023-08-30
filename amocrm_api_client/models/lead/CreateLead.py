@@ -1,15 +1,12 @@
-from typing import Optional
-from typing import Sequence
+import typing as t
 
-from pydantic import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 from .BaseLead import BaseLead
 
 
 __all__ = [
     "CreateLead",
-
 ]
 
 
@@ -32,11 +29,11 @@ class Source(BaseModel):
 
 
 class CreateEmbedded(BaseModel):
-    tags: Optional[Sequence[Tag]] = None
-    contacts: Optional[Sequence[Contact]] = None
-    companies: Optional[Sequence[Company]] = None
-    source: Optional[Source] = None
+    tags: t.Optional[t.List[Tag]] = None
+    contacts: t.Optional[t.List[Contact]] = None
+    companies: t.Optional[t.List[Company]] = None
+    source: t.Optional[Source] = None
 
 
 class CreateLead(BaseLead):
-    embedded: Optional[CreateEmbedded] = Field(None, alias='_embedded')
+    embedded: t.Optional[CreateEmbedded] = Field(None, alias='_embedded')

@@ -1,6 +1,6 @@
-from amocrm_api_client.component import IComponent
+from amocrm_api_client.request_executor import ExecutorComponent
 
-from amocrm_api_client.repositories import Account
+from amocrm_api_client.repositories import AccountsRepository
 from amocrm_api_client.repositories import CallsRepository
 from amocrm_api_client.repositories import CatalogsRepository
 from amocrm_api_client.repositories import CompaniesRepository
@@ -16,7 +16,7 @@ from amocrm_api_client.repositories import UsersRepository
 __all__ = ["AmoCrmApiClient"]
 
 
-class AmoCrmApiClient(IComponent):
+class AmoCrmApiClient:
 
     __slots__ = (
         "account",
@@ -35,7 +35,7 @@ class AmoCrmApiClient(IComponent):
 
     def __init__(
         self,
-        account: Account,
+        account: AccountsRepository,
         contacts_repository: ContactsRepository,
         companies_repository: CompaniesRepository,
         catalogs_repository: CatalogsRepository,
@@ -46,7 +46,7 @@ class AmoCrmApiClient(IComponent):
         leads_repository: LeadsRepository,
         tasks_repository: TasksRepository,
         users_repository: UsersRepository,
-        executor_component: IComponent,
+        executor_component: ExecutorComponent,
     ) -> None:
         self.leads = leads_repository
         self.tasks = tasks_repository

@@ -1,1 +1,1 @@
-from .ExecutorComponent import ExecutorComponent
+from .DefaultExecutorComponent import DefaultExecutorComponent

@@ -1,10 +1,8 @@
-from typing import Optional
-from typing import Sequence
+import typing as t
+from pydantic import BaseModel, Field
 
-from pydantic import BaseModel
-from pydantic import Field
+from ..tag import Tag
 
-from ..Tag import Tag
 
 __all__ = [
     "Lead",
@@ -21,40 +19,40 @@ class Company(BaseModel):
 
 
 class CatalogElementMetaData(BaseModel):
-    catalog_id: Optional[int] = None
+    catalog_id: t.Optional[int] = None
 
 
 class CatalogElement(BaseModel):
-    id: Optional[int] = None
-    metadata: Optional[CatalogElementMetaData] = None
+    id: t.Optional[int] = None
+    metadata: t.Optional[CatalogElementMetaData] = None
 
 
 class Embedded(BaseModel):
-    tags: Optional[Sequence[Tag]] = None
-    contacts: Optional[Sequence[Contact]] = None
-    companies: Optional[Sequence[Company]] = None
-    catalog_elements: Optional[Sequence[CatalogElement]] = None
+    tags: t.Optional[t.List[Tag]] = None
+    contacts: t.Optional[t.List[Contact]] = None
+    companies: t.Optional[t.List[Company]] = None
+    catalog_elements: t.Optional[t.List[CatalogElement]] = None
 
 
 class Lead(BaseModel):
     id: int
-    name: Optional[str] = None
-    price: Optional[int] = None
-    responsible_user_id: Optional[int] = None
-    group_id: Optional[int] = None
-    status_id: Optional[int] = None
-    pipeline_id: Optional[int] = None
-    loss_reason_id: Optional[int] = None
-    source_id: Optional[int] = None
+    name: t.Optional[str] = None
+    price: t.Optional[int] = None
+    responsible_user_id: t.Optional[int] = None
+    group_id: t.Optional[int] = None
+    status_id: t.Optional[int] = None
+    pipeline_id: t.Optional[int] = None
+    loss_reason_id: t.Optional[int] = None
+    source_id: t.Optional[int] = None
     created_by: int
     updated_by: int
-    closed_at: Optional[int] = None
+    closed_at: t.Optional[int] = None
     created_at: int
     updated_at: int
-    closest_task_at: Optional[int] = None
+    closest_task_at: t.Optional[int] = None
     is_deleted: bool
-    custom_fields_values: Optional[Sequence] = None
-    score: Optional[int] = None
-    account_id: Optional[int] = None
-    is_price_modified_by_robot: Optional[bool] = None
+    custom_fields_values: t.Optional[t.List] = None
+    score: t.Optional[int] = None
+    account_id: t.Optional[int] = None
+    is_price_modified_by_robot: t.Optional[bool] = None
     embedded: Embedded = Field(..., alias='_embedded')

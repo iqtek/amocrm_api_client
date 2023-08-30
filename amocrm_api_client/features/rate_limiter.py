@@ -1,5 +1,5 @@
-from asyncio import sleep
-from functools import wraps
+import asyncio
+import functools as ft
 from time import time
 import typing as t
 
@@ -36,7 +36,7 @@ class RateLimiterDecorator:
     def __init__(
         self,
         config: RateLimiterConfig,
-        trigger_exceptions: t.Collection[t.Type[Exception]],
+        trigger_exceptions: t.Collection[t.Type[BaseException]],
     ) -> None:
         self.__config = config
         self.__trigger_exceptions = trigger_exceptions
@@ -48,29 +48,26 @@ class RateLimiterDecorator:
         self.__over_speed_timestamp: float = 0
 
     def __call__(self, wrappee: T) -> T:
-        @wraps(wrappee)
-        async def wrapper(*args: Any, **kwargs: Any) -> Any:
+        @ft.wraps(wrappee)
+        async def wrapper(*args: t.Any, **kwargs: t.Any) -> t.Any:
             curr_time = time()
-
-            interval_length = self.__config.interval_length
-            max_request_count = self.__config.max_request_count
 
             forced_delay = self.__over_speed_timestamp + \
                 self.__config.forced_delay - curr_time
 
             if forced_delay > 0:
-                await sleep(forced_delay)
+                await asyncio.sleep(forced_delay)
 
-            self.__interval_start = curr_time // interval_length
+            self.__interval_start = curr_time // self.__config.period
             if self.__interval_start == self.__last_interval_start:
                 self.__request_counter += 1
             else:
                 self.__last_interval_start = self.__interval_start
                 self.__request_counter = 1
 
-            if self.__request_counter >= max_request_count:
-                delay = interval_length - curr_time % interval_length
-                await sleep(delay)
+            if self.__request_counter >= self.__config.max_request_count:
+                delay = interval_length - curr_time % self.__config.period
+                await asyncio.sleep(delay)
 
             try:
                 return await wrappee(*args, **kwargs)

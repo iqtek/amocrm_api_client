@@ -1,21 +1,16 @@
-from typing import Collection
+import typing as t
 
-from amocrm_api_client.make_json_request import IJsonResponse
-from amocrm_api_client.make_json_request import RequestMethod
-
-from .AbstractRepository import AbstractRepository
+from .utils import AbstractRepository
 
 
-__all__ = [
-    "EventsRepository",
-]
+__all__ = ["EventsRepository"]
 
 
 class EventsRepository(AbstractRepository):
 
     __slots__ = ()
 
-    async def add_card(self, phone_number: str, users: Collection[int]) -> None:
+    async def add_card(self, phone_number: str, users: t.Collection[int]) -> None:
         json = {
             "add": [
                 {
@@ -26,8 +21,8 @@ class EventsRepository(AbstractRepository):
             ]
         }
         await self._request_executor(
-            lambda: self._make_request_function.request(
-                method=RequestMethod.POST,
+            lambda: self._make_amocrm_request(
+                method="POST",
                 path=f"/api/v2/events",
                 json=json,
             )

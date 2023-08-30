@@ -1,5 +1,5 @@
-from asyncio import sleep
-from functools import wraps
+import asyncio
+import functools as ft
 import typing as t
 
 import pydantic
@@ -31,14 +31,14 @@ class RepeaterDecorator:
     def __init__(
         self,
         config: RepeaterConfig,
-        trigger_exceptions: t.Collection[t.Type[Exception]],
+        trigger_exceptions: t.Collection[t.Type[BaseException]],
     ) -> None:
         self.__config = config
         self.__trigger_exceptions = trigger_exceptions
 
     def __call__(self, func: T) -> T:
-        @wraps(func)
-        async def wrapper(*args: Any, **kwargs: Any) -> Any:
+        @ft.wraps(func)
+        async def wrapper(*args: t.Any, **kwargs: t.Any) -> t.Any:
             for i in range(self.__config.tries):
                 try:
                     return await func(*args, **kwargs)
@@ -47,6 +47,6 @@ class RepeaterDecorator:
                         raise e
 
                 delay = min(self.__config.min_delay * self.__config.factor ** i, self.__config.max_delay)
-                await sleep(delay)
+                await asyncio.sleep(delay)
 
         return wrapper

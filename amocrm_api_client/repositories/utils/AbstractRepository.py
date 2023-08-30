@@ -1,27 +1,21 @@
-from amocrm_api_client.executor import IExecutorComponent
-from amocrm_api_client.make_amocrm_request import IMakeAmocrmRequestFunction
-from amocrm_api_client.model_builder import IModelBuilder
+from amocrm_api_client.make_amocrm_request import MakeAmocrmRequestFunction
+from amocrm_api_client.request_executor import ExecutorComponent
 
 
-__all__ = [
-    "AbstractRepository",
-]
+__all__ = ["AbstractRepository"]
 
 
 class AbstractRepository:
 
     __slots__ = (
         "_request_executor",
-        "_make_request_function",
-        "_model_builder",
+        "_make_amocrm_request",
     )
 
     def __init__(
         self,
-        request_executor: IExecutorComponent,
-        make_amocrm_request_function: IMakeAmocrmRequestFunction,
-        model_builder: IModelBuilder,
+        request_executor: ExecutorComponent,
+        make_amocrm_request: MakeAmocrmRequestFunction,
     ) -> None:
         self._request_executor = request_executor
-        self._make_request_function = make_amocrm_request_function
-        self._model_builder = model_builder
+        self._make_amocrm_request = make_amocrm_request

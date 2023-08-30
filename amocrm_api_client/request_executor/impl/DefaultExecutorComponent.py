@@ -1,40 +1,46 @@
 import asyncio
 from logging import Logger
 import typing as t
+
 from amocrm_api_client.utils import amocrm_api_client_logger
 from amocrm_api_client.make_amocrm_request import ExceedRequestLimitException
 
 from ..core import ExecutorComponent
+
 from .TaskWrapper import TaskWrapper
 
 
 __all__ = ["DefaultExecutorComponent"]
 
 
-T = TypeVar('T')
+T = t.TypeVar('T')
 
 
 class DefaultExecutorComponent(ExecutorComponent):
 
     __slots__ = (
+        "__task_decorator",
+        "__logger",
         "__queue",
         "__background_task",
-        "__logger",
     )
 
     def __init__(
         self,
-        logger: Optional[Logger] = None,
+        task_decorator: t.Optional[t.Callable] = None,
+        task_thrown_exceptions: t.Optional[t.Callable] = None,
+        logger: t.Optional[Logger] = None,
     ) -> None:
+        self.__task_decorator = task_decorator or (lambda x: x)
         self.__logger = logger or amocrm_api_client_logger
         self.__queue: asyncio.PriorityQueue[TaskWrapper] = asyncio.PriorityQueue()
         self.__background_task: t.Optional[asyncio.Task] = None
 
     async def __execute_task(self, task_wrapper: TaskWrapper) -> None:
         try:
-            await task_wrapper.execute()
+            await self.__task_decorator(task_wrapper.execute)()
         except Exception as exc:
-            self.__logger.error(f"Execute task error: {exc!r}.")
+            self.__logger.error(f"Execute task error.", exc_info=exc)
 
     async def __background_executor(self) -> None:
         try:
@@ -69,7 +75,7 @@ class DefaultExecutorComponent(ExecutorComponent):
         return await task.result()
 
     async def initialize(self) -> None:
-        self.__background_task = self.__event_loop.create_task(self.__background_executor())
+        self.__background_task = asyncio.create_task(self.__background_executor())
 
     async def deinitialize(self) -> None:
         if self.__background_task is not None:

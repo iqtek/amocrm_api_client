@@ -1,4 +1,4 @@
-from .Account import Account
+from .AccountsRepository import AccountsRepository
 from .CallsRepository import CallsRepository
 from .ContactsRepository import ContactsRepository
 from .EventsRepository import EventsRepository

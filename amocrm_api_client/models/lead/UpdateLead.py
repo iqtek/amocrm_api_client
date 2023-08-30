@@ -1,17 +1,16 @@
-from typing import Optional
-from typing import Sequence
+import typing as t
 
 from pydantic import BaseModel
 from pydantic import Field
 
 from .BaseLead import BaseLead
-from ..Tag import Tag
+from ..tag import Tag
 
 
 class UpdateEmbedded(BaseModel):
-    tags: Optional[Sequence[Tag]] = None
+    tags: t.Optional[t.List[Tag]] = None
 
 
 class UpdateLead(BaseLead):
     id: int
-    embedded: Optional[UpdateEmbedded] = Field(None, alias='_embedded')
+    embedded: t.Optional[UpdateEmbedded] = Field(None, alias='_embedded')

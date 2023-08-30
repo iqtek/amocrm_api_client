@@ -1,2 +1,2 @@
 from .core import *
-from .impl import MakeAmocrmRequestFunctionImpl
+from .impl import *

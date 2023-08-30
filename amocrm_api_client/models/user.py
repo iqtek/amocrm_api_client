@@ -1,21 +1,22 @@
-from typing import Optional
+import typing as t
 
 from pydantic import BaseModel
 
 
 __all__ = [
+    "UserRights",
     "User",
 ]
 
 
-class Rights(BaseModel):
+class UserRights(BaseModel):
     mail_access: bool
     catalog_access: bool
     is_admin: bool
     is_free: bool
     is_active: bool
-    group_id: Optional[int] = None
-    role_id: Optional[int] = None
+    group_id: t.Optional[int] = None
+    role_id: t.Optional[int] = None
 
 
 class User(BaseModel):
@@ -23,4 +24,4 @@ class User(BaseModel):
     name: str
     email: str
     lang: str
-    rights: Rights
+    rights: UserRights

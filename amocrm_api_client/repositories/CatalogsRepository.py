@@ -1,66 +1,53 @@
-from typing import Collection, Optional, Union
-
-from amocrm_api_client.make_json_request import RequestMethod
+import typing as t
 
 from amocrm_api_client.models import Page
 from amocrm_api_client.models import Catalog
 from amocrm_api_client.models import Element
 from amocrm_api_client.models import CatalogElement
 
-from ..core import IPaginable
-from .AbstractRepository import AbstractRepository
-
-__all__ = [
-    "CatalogsRepository",
-]
+from .utils import Paginable, make_query_parameters, build_model, AbstractRepository
 
 
-class CatalogsRepository(IPaginable[Catalog], AbstractRepository):
+__all__ = ["CatalogsRepository"]
+
+
+class CatalogsRepository(Paginable[Catalog], AbstractRepository):
 
     __slots__ = ()
 
     async def get_page(
         self,
-        _with: Optional[Collection[str]] = None,
+        _with: t.Optional[t.Collection[str]] = None,
         page: int = 1,
         limit: int = 250,
-        query: Optional[Union[str, int]] = None
+        query: t.Optional[t.Union[str, int]] = None
     ) -> Page[Catalog]:
         response = await self._request_executor(
-            lambda: self._make_request_function.request(
-                method=RequestMethod.GET,
+            lambda: self._make_amocrm_request(
+                method="GET",
                 path=f"/api/v4/catalogs",
             )
         )
-        response.json["_embedded"] = response.json["_embedded"]["catalogs"]
-        print(response.json)
-        model = self._model_builder.build_model(
-            model_type=Page[Catalog],
-            data=response.json,
-        )
-        return model
+        response["_embedded"] = response["_embedded"]["catalogs"]
+        return build_model(model_type=Page[Catalog], data=response.json)
 
     async def get_page_elements(
         self,
         catalog_id: int,
-        _with: Optional[Collection[str]] = None,
+        _with: t.Optional[t.Collection[str]] = None,
         page: int = 1,
         limit: int = 250,
-        query: Optional[Union[str, int]] = None
+        query: t.Optional[t.Union[str, int]] = None
     ) -> Page[Element]:
+        # TODO
         response = await self._request_executor(
-            lambda: self._make_request_function.request(
-                method=RequestMethod.GET,
+            lambda: self._make_amocrm_request(
+                method="GET",
                 path=f"/api/v4/catalogs/{catalog_id}/elements",
             )
         )
-        response.json["_embedded"] = response.json["_embedded"]["elements"]
-        print(response.json)
-        model = self._model_builder.build_model(
-            model_type=Page[Element],
-            data=response.json,
-        )
-        return model
+        response["_embedded"] = response["_embedded"]["elements"]
+        return build_model(model_type=Page[Element], data=response)
 
     async def get_catalog_element(
         self,
@@ -68,10 +55,9 @@ class CatalogsRepository(IPaginable[Catalog], AbstractRepository):
         element_id: int
     ) -> CatalogElement:
         response = await self._request_executor(
-            lambda: self._make_request_function.request(
-                method=RequestMethod.GET,
+            lambda: self._make_amocrm_request(
+                method="GET",
                 path=f"/api/v4/catalogs/{catalog_id}/elements/{element_id}",
             )
         )
-        model = self._model_builder.build_model(CatalogElement, response.json)
-        return model
+        return build_model(CatalogElement, response)

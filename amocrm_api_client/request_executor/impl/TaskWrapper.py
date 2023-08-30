@@ -1,11 +1,14 @@
+import asyncio
 from time import time
 import typing as t
+
+from ..core import TtlExpiredException
 
 
 __all__ = ["TaskWrapper"]
 
 
-T = TypeVar("T")
+T = t.TypeVar("T")
 
 
 class TaskWrapper(t.Generic[T]):
@@ -36,11 +39,11 @@ class TaskWrapper(t.Generic[T]):
         if ttl is not None:
             self.__timestamp = time()
 
-        self.__result = Future()
+        self.__result = asyncio.Future()
 
     async def execute(self) -> None:
-        if not any((self.__ttl is None, time() <= self.__timestamp + self.__ttl)):
-            self.__result.set_exception(TimeoutException())
+        if self.__ttl is not None and time() <= self.__timestamp + self.__ttl:
+            self.__result.set_exception(TtlExpiredException())
             return
 
         try:

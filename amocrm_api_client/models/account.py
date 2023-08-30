@@ -1,9 +1,6 @@
-from typing import Any
-from typing import Mapping
-from typing import Optional
+import typing as t
 
-from pydantic import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 from pydantic_collections import BaseCollectionModel
 
 
@@ -25,7 +22,7 @@ class AmojoRights(BaseModel):
 class UsersGroup(BaseModel):
     id: int
     name: str
-    uuid: Optional[str] = None
+    uuid: t.Optional[str] = None
 
 
 class UsersGroups(BaseCollectionModel[UsersGroup]):
@@ -35,9 +32,9 @@ class UsersGroups(BaseCollectionModel[UsersGroup]):
 class TaskType(BaseModel):
     id: int
     name: str
-    color: Optional[str] = None
-    icon_id: Optional[str] = None
-    code: Optional[str] = None
+    color: t.Optional[str] = None
+    icon_id: t.Optional[str] = None
+    code: t.Optional[str] = None
 
 
 class TaskTypes(BaseCollectionModel[TaskType]):
@@ -55,11 +52,11 @@ class DatetimeSettings(BaseModel):
 
 
 class AccountEmbedded(BaseModel):
-    amojo_rights: Optional[AmojoRights] = None
-    users_groups: Optional[UsersGroups] = None
-    task_types: Optional[TaskTypes] = None
-    datetime_settings: Optional[DatetimeSettings] = None
-    entity_names: Optional[Mapping[str, Any]] = None
+    amojo_rights: t.Optional[AmojoRights] = None
+    users_groups: t.Optional[UsersGroups] = None
+    task_types: t.Optional[TaskTypes] = None
+    datetime_settings: t.Optional[DatetimeSettings] = None
+    entity_names: t.Optional[t.Mapping[str, t.Any]] = None
 
 
 class Account(BaseModel):
@@ -78,6 +75,6 @@ class Account(BaseModel):
     is_helpbot_enabled: bool
     is_technical_account: bool
     contact_name_display_order: int
-    amojo_id: Optional[str] = None
-    version: Optional[int] = None
-    embedded: Optional[AccountEmbedded] = Field(None, alias='_embedded')
+    amojo_id: t.Optional[str] = None
+    version: t.Optional[int] = None
+    embedded: t.Optional[AccountEmbedded] = Field(None, alias='_embedded')

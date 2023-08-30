@@ -1,6 +1,6 @@
 import typing as t
 
-from amocrm_api_client.exceptions import AmocrmClientException
+from amocrm_api_client.utils import AmocrmClientException
 
 
 __all__ = [
@@ -19,13 +19,13 @@ class MakeAmocrmRequestFunction:
 
     __slots__ = ()
 
-    async def request(
+    async def __call__(
         self,
         method: str,
         path: str,
-        parameters: Optional[t.Mapping[str, str]] = None,
-        headers: Optional[t.Mapping[str, str]] = None,
-        json: Optional[t.Mapping[str, t.Any]] = None,
+        parameters: t.Optional[t.Mapping[str, str]] = None,
+        headers: t.Optional[t.Mapping[str, str]] = None,
+        json: t.Optional[t.Union[t.Mapping[str, t.Any], t.Sequence[t.Any]]] = None,
     ) -> t.Mapping[str, t.Any]:
         raise NotImplementedError()
 
@@ -43,13 +43,7 @@ class EntityNotFoundException(AmocrmClientException):
 
 
 class ExceedRequestLimitException(AmocrmClientException):
-
-    def __init__(
-        self,
-        reported_timeout: t.Optional[float] = None,
-    ) -> None:
-        reported_timeout = str(reported_timeout) or "not specified"
-        super().__init__(f"reported_timeout: `{reported_timeout}`.")
+    pass
 
 
 class IncorrectDataException(AmocrmClientException):

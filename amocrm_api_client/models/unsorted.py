@@ -1,10 +1,8 @@
-from typing import List
-from typing import Optional
+import typing as t
 
-from pydantic import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 
-from ..lead import CreateLead
+from .lead import CreateLead
 
 
 __all__ = [
@@ -15,7 +13,7 @@ __all__ = [
 
 
 class Embedded(BaseModel):
-    leads: List[CreateLead]
+    leads: t.List[CreateLead]
 
 
 class UnsortedCallMetadata(BaseModel):
@@ -24,7 +22,7 @@ class UnsortedCallMetadata(BaseModel):
     phone: str
     called_at: int
     duration: int
-    link: Optional[str] = None
+    link: t.Optional[str] = None
     service_code: str
     is_call_event_needed: bool
 
@@ -35,4 +33,4 @@ class UnsortedCall(BaseModel):
     pipeline_id: int
     created_at: int
     metadata: UnsortedCallMetadata
-    embedded: Optional[Embedded] = Field(None, alias='_embedded')
+    embedded: t.Optional[Embedded] = Field(None, alias='_embedded')

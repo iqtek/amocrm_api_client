@@ -1,73 +1,59 @@
-from typing import Collection, Optional, Union
-
-from amocrm_api_client.make_json_request import RequestMethod
+import typing as t
 
 from amocrm_api_client.models import Page
 from amocrm_api_client.models import Contact
 
-from ..core import IPaginable
-from .AbstractRepository import AbstractRepository
-
-from .functions import make_params
+from .utils import AbstractRepository, Paginable, make_query_parameters, build_model
 
 
-__all__ = [
-    "ContactsRepository",
-]
+__all__ = ["ContactsRepository"]
 
 
-class ContactsRepository(IPaginable[Contact], AbstractRepository):
+class ContactsRepository(Paginable[Contact], AbstractRepository):
 
     __slots__ = ()
 
     async def get_page(
         self,
-        _with: Optional[Collection[str]] = None,
+        _with: t.Optional[t.Collection[str]] = None,
         page: int = 1,
         limit: int = 250,
-        query: Optional[Union[str, int]] = None,
+        query: t.Optional[t.Union[str, int]] = None,
         filter: str = None,
     ) -> Page[Contact]:
-        params = make_params(_with=_with, page=page, limit=limit, query=query)
         response = await self._request_executor(
-            lambda: self._make_request_function.request(
-                method=RequestMethod.GET,
+            lambda: self._make_amocrm_request(
+                method="GET",
                 path=f"/api/v4/contacts?filter[custom_fields_values][{field_id}][]={value}",
-                parameters=params,
+                parameters=make_query_parameters(_with=_with, page=page, limit=limit, query=query),
             )
         )
 
-        response.json["_embedded"] = response.json["_embedded"]["contacts"]
-        model = self._model_builder.build_model(
-            model_type=Page[Contact],
-            data=response.json,
-        )
-        return model
+        response["_embedded"] = response["_embedded"]["contacts"]
+        return build_model(model_type=Page[Contact], data=response)
 
     async def get_by_id(
         self,
         id: int
     ) -> Contact:
         response = await self._request_executor(
-            lambda: self._make_request_function.request(
-                method=RequestMethod.GET,
+            lambda: self._make_amocrm_request(
+                method="GET",
                 path=f"/api/v4/contacts/{id}",
             )
         )
-        model = self._model_builder.build_model(Contact, response.json)
-        return model
+        return build_model(Contact, response)
 
-    async def smart_redirect(self, phone: str) -> Collection[Contact]:
+    async def smart_redirect(self, phone: str) -> t.Collection[Contact]:
         response = await self._request_executor(
-            lambda: self._make_request_function.request(
-                method=RequestMethod.GET,
+            lambda: self._make_amocrm_request(
+                method="GET",
                 path=f"/private/api/v2/json/contacts/list",
                 parameters={"query": phone}
             )
         )
 
-        result = []
-        for json_contact in response.json["response"]["contacts"]:
-            result.append(self._model_builder.build_model(Contact, json_contact))
-
-        return result
+        return [
+            build_model(Contact, json_contact)
+            for json_contact in response["response"]["contacts"]
+        ]

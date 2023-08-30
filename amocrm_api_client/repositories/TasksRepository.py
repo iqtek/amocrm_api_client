@@ -1,11 +1,9 @@
-from amocrm_api_client.make_json_request import RequestMethod
 from amocrm_api_client.models import Task
 
-from .AbstractRepository import AbstractRepository
+from .utils import AbstractRepository, build_model
 
-__all__ = [
-    "TasksRepository",
-]
+
+__all__ = ["TasksRepository"]
 
 
 class TasksRepository(AbstractRepository):
@@ -17,10 +15,9 @@ class TasksRepository(AbstractRepository):
         id: int
     ) -> Task:
         response = await self._request_executor(
-            lambda: self._make_request_function.request(
-                method=RequestMethod.GET,
+            lambda: self._make_amocrm_request(
+                method="GET",
                 path=f"/api/v4/tasks/{id}",
             )
         )
-        model = self._model_builder.build_model(Task, response.json)
-        return model
+        return build_model(Task, response)

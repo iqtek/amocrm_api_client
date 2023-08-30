@@ -1,13 +1,9 @@
-from amocrm_api_client.make_json_request import RequestMethod
-
 from amocrm_api_client.models.unsorted import UnsortedCall
 
-from .AbstractRepository import AbstractRepository
+from .utils import AbstractRepository
 
 
-__all__ = [
-    "UnsortedRepository",
-]
+__all__ = ["UnsortedRepository"]
 
 
 class UnsortedRepository(AbstractRepository):
@@ -18,8 +14,8 @@ class UnsortedRepository(AbstractRepository):
         data = call.dict(exclude_none=True)
         data["metadata"]["from"] = data["metadata"].pop("from_")
         await self._request_executor(
-            lambda: self._make_request_function.request(
-                method=RequestMethod.POST,
+            lambda: self._make_amocrm_request(
+                method="POST",
                 path=f"/api/v4/leads/unsorted/sip",
                 json=[data],
             )
